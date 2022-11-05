@@ -1,0 +1,34 @@
+@page "/pong"
+
+<Viewer OnSetUp="@SetUp"></Viewer>
+
+@code
+{
+    void SetUp(SetUpArgs e)
+    {
+        var app = e.App;
+        var assets = app.Assets;
+
+        app.Name = "Pong Game";
+        app.Width = 600;
+        app.Height = 400;
+        app.UrlRoot = "pingpong";
+        assets.AddSound("hitSound", "hitSound.wav");
+        assets.AddSound("scoreSound", "scoreSound.wav");
+        assets.AddSound("wallHitSound", "wallHitSound.wav");
+        /*
+        function loadImage(src) {
+        return new Promise((resolve, reject)=> {
+        console.log(src);
+
+        var img = new Image();
+        img.onload = ()=> resolve(img);
+        img.src = src;
+        });
+        }
+
+        const img = await loadImage(url)
+        }
+        */
+    }
+}

@@ -1,0 +1,47 @@
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    @if (isLoading)
+    {
+        <div>
+            <h2>Loading @app.Name</h2>
+            <div class="progress mt-2" style="height: 2em;">
+                <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: @percentLoaded%; background-color: #204066;"></div>
+            </div>
+            <div>
+                <span id="progressLabel" class="text-muted">@messageProgress</span>
+            </div>
+        </div>
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public EventCallback<SetUpArgs> OnSetUp { get; set; }
+
+    private bool isLoading = true;
+    private int percentLoaded = 1;
+    private string messageProgress = "Init ...";
+    private BAApp app = new BAApp();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await OnSetUp.InvokeAsync(new(app));
+        percentLoaded = 1;
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            while (percentLoaded < 100)
+            {
+                await Task.Delay(1500);
+                percentLoaded++;
+                StateHasChanged();
+            }
+        }
+    }
+}
