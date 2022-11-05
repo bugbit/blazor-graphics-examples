@@ -2,10 +2,10 @@
     @if (isLoading)
     {
         <div>
-            <h2>Loading @app.Name</h2>
+            <h2>Loading @App?.Name</h2>
             <div class="progress mt-2" style="height: 2em;">
                 <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated"
-                style="width: @percentLoaded%; background-color: #204066;"></div>
+                style="width: @(PercentLoaded)%; background-color: #204066;"></div>
             </div>
             <div>
                 <span id="progressLabel" class="text-muted">@messageProgress</span>
@@ -17,18 +17,21 @@
 @code
 {
     [Parameter]
-    public EventCallback<SetUpArgs> OnSetUp { get; set; }
+    public GRApp? App { get; set; }
+
+    [Parameter]
+    public int PercentLoaded { get; set; } = 1;
+
+    [Parameter]
+    public EventCallback OnLoadedAssets { get; set; }
 
     private bool isLoading = true;
-    private int percentLoaded = 1;
     private string messageProgress = "Init ...";
-    private BAApp app = new BAApp();
 
     protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await OnSetUp.InvokeAsync(new(app));
-        percentLoaded = 1;
+        PercentLoaded = 1;
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -36,12 +39,18 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            while (percentLoaded < 100)
+            if (App != null && App.Assets.Count > 0)
             {
-                await Task.Delay(1500);
-                percentLoaded++;
-                StateHasChanged();
+                var step = 100 / App.Assets.Count;
+
+                foreach (var asset in App.Assets.Values)
+                {
+                    await asset.Load();
+                    PercentLoaded += step;
+                    StateHasChanged();
+                }
             }
+            await OnLoadedAssets.InvokeAsync();
         }
     }
 }

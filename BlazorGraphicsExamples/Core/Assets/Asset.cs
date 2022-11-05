@@ -28,9 +28,16 @@ SOFTWARE.
 
 namespace BlazorGraphicsExamples.Core.Assets;
 
-public class Asset
+public abstract class Asset
 {
+    public string Key { get; }
     public string Url { get; }
 
-    public Asset(string url) => Url = url;
+    public Asset(string key, string url)
+    {
+        Key = key;
+        Url = url;
+    }
+
+    public abstract Task<string> Load();
 }

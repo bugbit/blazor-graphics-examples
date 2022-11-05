@@ -30,5 +30,10 @@ namespace BlazorGraphicsExamples.Core.Assets;
 
 public class AssetSound : Asset
 {
-    public AssetSound(string url) : base(url) { }
+    public AssetSound(string key, string url) : base(key, url)
+    {
+        //var x = Interop.GetWelcomeMessage();
+    }
+
+    public override Task<string> Load() => Interop.LoadSound(Key, Url);
 }

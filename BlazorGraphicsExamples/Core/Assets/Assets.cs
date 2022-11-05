@@ -30,5 +30,5 @@ namespace BlazorGraphicsExamples.Core.Assets;
 
 public class Assets : Dictionary<string, Asset>
 {
-    public void AddSound(string key, string url) => Add(key, new AssetSound(url));
+    public void AddSound(string key, string url) => Add(key, new AssetSound(key, url));
 }

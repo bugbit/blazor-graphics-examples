@@ -1,12 +1,13 @@
 @page "/pong"
 
-<Viewer OnSetUp="@SetUp"></Viewer>
+<Viewer App=@app></Viewer>
 
 @code
 {
-    void SetUp(SetUpArgs e)
+    GRApp app = new();
+
+    protected override void OnInitialized()
     {
-        var app = e.App;
         var assets = app.Assets;
 
         app.Name = "Pong Game";
@@ -30,5 +31,6 @@
         const img = await loadImage(url)
         }
         */
+        base.OnInitialized();
     }
 }

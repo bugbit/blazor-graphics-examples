@@ -28,7 +28,7 @@ SOFTWARE.
 
 namespace BlazorGraphicsExamples.Core;
 
-public class BAApp
+public class GRApp
 {
     public string Name { get; set; } = "App1";
     public int Width { get; set; } = 800;

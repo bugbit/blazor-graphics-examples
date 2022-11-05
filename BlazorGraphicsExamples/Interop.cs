@@ -26,14 +26,17 @@ SOFTWARE.
 
 #endregion
 
-namespace BlazorGraphicsExamples.Core.Components;
+using System.Runtime.InteropServices.JavaScript;
+using System.Runtime.Versioning;
 
-public class SetUpArgs
+namespace BlazorGraphicsExamples;
+
+[SupportedOSPlatform("browser")]
+public partial class Interop
 {
-    public BAApp App { get; }
+    [JSImport("getMessage", "Interop")]
+    internal static partial string GetWelcomeMessage();
 
-    public SetUpArgs(BAApp app)
-    {
-        App = app;
-    }
+    [JSImport("loadSound", "Interop")]
+    internal static partial Task<string> LoadSound(string key, string src);
 }
