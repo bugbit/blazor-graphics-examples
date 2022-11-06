@@ -1,3 +1,5 @@
+@implements IDisposable
+
 <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
     @if (isLoading)
     {
@@ -20,18 +22,20 @@
     public GRApp? App { get; set; }
 
     [Parameter]
-    public int PercentLoaded { get; set; } = 1;
+    public int PercentLoaded { get; set; } = 0;
 
     [Parameter]
     public EventCallback OnLoadedAssets { get; set; }
 
     private bool isLoading = true;
     private string messageProgress = "Init ...";
+    private Progress<int>? progressSetPercentLoaded;
 
-    protected async override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
-        PercentLoaded = 1;
+        base.OnInitialized();
+        progressSetPercentLoaded = new Progress<int>(SetPercentLoaded);
+        App?.Initialize();
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -39,18 +43,20 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            if (App != null && App.Assets.Count > 0)
-            {
-                var step = 100 / App.Assets.Count;
-
-                foreach (var asset in App.Assets.Values)
-                {
-                    await asset.Load();
-                    PercentLoaded += step;
-                    StateHasChanged();
-                }
-            }
+            if (App != null)
+                await App.LoadAssets(progressSetPercentLoaded);
             await OnLoadedAssets.InvokeAsync();
         }
+    }
+
+    private void SetPercentLoaded(int percentLoaded)
+    {
+        PercentLoaded = percentLoaded;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        App?.Dispose();
     }
 }

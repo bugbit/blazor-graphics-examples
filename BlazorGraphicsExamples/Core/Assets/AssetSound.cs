@@ -35,5 +35,11 @@ public class AssetSound : Asset
         //var x = Interop.GetWelcomeMessage();
     }
 
-    public override Task<string> Load() => Interop.LoadSound(Key, Url);
+    public override async Task<string?> Load()
+    {
+        await Interop.LoadSound(Key, Url);
+
+        return null;
+    }
+    public override Task<string?> UnLoad() => Task.FromResult<string?>(null);
 }

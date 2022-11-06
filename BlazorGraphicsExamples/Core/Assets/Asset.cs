@@ -36,8 +36,9 @@ public abstract class Asset
     public Asset(string key, string url)
     {
         Key = key;
-        Url = url;
+        Url = $"assets/{url}";
     }
 
-    public abstract Task<string> Load();
+    public abstract Task<string?> Load();
+    public abstract Task<string?> UnLoad();
 }

@@ -9,8 +9,6 @@ export function getMessage() {
 export function loadAsset(key, asset) {
     console.log(`asset {key} loaded.`);
     assets.set(key, asset);
-
-    return key;
 }
 
 export function logAssetError(key, error) {
@@ -19,7 +17,12 @@ export function logAssetError(key, error) {
 }
 
 export function loadSound(key, src) {
-    var audio = new Audio(src);
+    return new Promise((resolve, reject) => {
+        console.log(`asset sound {key} load {src}`);
 
-    return audio.load().then(() => { loadAsset(key, audio); return null; }).catch(() => logAssetError(audio.error));
+        var audio = new Audio();
+        audio.onload = () => { loadAsset(key, audio); resolve(null); }
+        audio.onerror = () => reject(logAssetError(audio.error))
+        audio.src = src;
+    });
 }

@@ -26,17 +26,34 @@ SOFTWARE.
 
 #endregion
 
-using System.Runtime.InteropServices.JavaScript;
-using System.Runtime.Versioning;
+namespace BlazorGraphicsExamples.Games.Pong;
 
-namespace BlazorGraphicsExamples;
-
-[SupportedOSPlatform("browser")]
-public partial class Interop
+public class PongApp : GRApp
 {
-    [JSImport("getMessage", "Interop")]
-    internal static partial string GetWelcomeMessage();
+    public override void Initialize()
+    {
+        base.Initialize();
 
-    [JSImport("loadSound", "Interop")] 
-    internal static partial Task LoadSound(string key, string src);
+        Name = "Pong Game";
+        Width = 600;
+        Height = 400;
+        UrlRoot = "pingpong";
+        Assets.AddSound("hitSound", "pong/hitSound.wav");
+        Assets.AddSound("scoreSound", "pong/scoreSound.wav");
+        Assets.AddSound("wallHitSound", "pong/wallHitSound.wav");
+        /*
+        function loadImage(src) {
+        return new Promise((resolve, reject)=> {
+        console.log(src);
+
+        var img = new Image();
+        img.onload = ()=> resolve(img);
+        img.src = src;
+        });
+        }
+
+        const img = await loadImage(url)
+        }
+        */
+    }
 }
